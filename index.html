@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Receipt to Refresh</title>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+background:#f5f5f5;
+margin:0;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.phone{
+width:360px;
+background:white;
+border-radius:25px;
+box-shadow:0 20px 40px rgba(0,0,0,0.15);
+overflow:hidden;
+}
+
+.screen{
+padding:30px;
+text-align:center;
+display:none;
+}
+
+.screen.active{
+display:block;
+}
+
+h1{
+font-size:22px;
+margin-bottom:10px;
+}
+
+p{
+color:#666;
+font-size:14px;
+}
+
+button{
+background:#58cc02;
+border:none;
+color:white;
+padding:14px;
+border-radius:12px;
+font-size:16px;
+cursor:pointer;
+margin-top:20px;
+width:100%;
+}
+
+button.blue{
+background:#1cb0f6;
+}
+
+.scan-box{
+height:200px;
+border:2px dashed #58cc02;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-top:20px;
+}
+
+video{
+width:100%;
+border-radius:12px;
+margin-top:10px;
+}
+
+.loading{
+font-size:18px;
+margin-top:40px;
+color:#58cc02;
+}
+
+.check{
+font-size:60px;
+color:#58cc02;
+}
+
+.week{
+display:flex;
+justify-content:space-between;
+margin-top:20px;
+}
+
+.day{
+width:28px;
+height:28px;
+border-radius:50%;
+background:#58cc02;
+}
+
+.day.off{
+background:#ddd;
+}
+
+.small{
+font-size:12px;
+color:#999;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="phone">
+
+<!-- landing -->
+
+<div class="screen active" id="landing">
+
+<h1>Your receipt, your 1 minute maths</h1>
+
+<p>Turn grocery runs into mental gymnastics</p>
+
+<button onclick="next('scan')">
+Scan Receipt
+</button>
+
+<p class="small">
+Daily brain boost for 45+
+</p>
+
+</div>
+
+
+<!-- scan -->
+
+<div class="screen" id="scan">
+
+<h1>Scan your receipt</h1>
+
+<p>Extracting numbers for today's challenge</p>
+
+<div class="scan-box">
+<video id="camera" autoplay></video>
+</div>
+
+<button onclick="next('ai')">
+Continue
+</button>
+
+</div>
+
+
+<!-- AI thinking -->
+
+<div class="screen" id="ai">
+
+<h1>AI is thinking</h1>
+
+<div class="loading">
+🧠 Creating your challenge
+</div>
+
+</div>
+
+
+<!-- start -->
+
+<div class="screen" id="start">
+
+<h1>Today's numbers are ready</h1>
+
+<p>Based on your receipt</p>
+
+<button onclick="next('challenge')">
+Start 1 minute challenge
+</button>
+
+</div>
+
+
+<!-- challenge -->
+
+<div class="screen" id="challenge">
+
+<h1>The Breakfast Budget Blitz</h1>
+
+<p>
+
+Starting total £36.60
+
+<br><br>
+
+Add milk £2.30  
+Add blueberries £3.20  
+
+<br><br>
+
+You returned salmon £8.90
+
+<br><br>
+
+What is the final total?
+
+</p>
+
+<button class="blue" onclick="next('done')">
+
+Open in Duolingo Math
+
+</button>
+
+<p class="small">Takes about 60 seconds</p>
+
+</div>
+
+
+<!-- done -->
+
+<div class="screen" id="done">
+
+<div class="check">✓</div>
+
+<h1>Done for today</h1>
+
+<p>Your brain just got stronger</p>
+
+<div class="week">
+
+<div class="day"></div>
+<div class="day"></div>
+<div class="day"></div>
+<div class="day"></div>
+<div class="day off"></div>
+<div class="day off"></div>
+<div class="day off"></div>
+
+</div>
+
+<button onclick="next('landing')">
+
+See you tomorrow
+
+</button>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+function next(id){
+
+document.querySelectorAll(".screen").forEach(s=>{
+s.classList.remove("active")
+})
+
+document.getElementById(id).classList.add("active")
+
+if(id==="ai"){
+
+setTimeout(()=>{
+next("start")
+},2000)
+
+}
+
+}
+
+navigator.mediaDevices.getUserMedia({video:true})
+.then(stream=>{
+document.getElementById("camera").srcObject=stream
+})
+.catch(()=>{})
+
+</script>
+
+
+</body>
+
+</html>
