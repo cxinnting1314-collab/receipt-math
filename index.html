@@ -64,19 +64,31 @@ background:#1cb0f6;
 }
 
 .scan-box{
-height:200px;
+position:relative;
+height:220px;
 border:2px dashed #58cc02;
 border-radius:12px;
-display:flex;
-align-items:center;
-justify-content:center;
-margin-top:20px;
+overflow:hidden;
 }
 
 video{
 width:100%;
-border-radius:12px;
-margin-top:10px;
+height:100%;
+object-fit:cover;
+}
+
+.scan-line{
+position:absolute;
+width:100%;
+height:3px;
+background:#58cc02;
+top:0;
+animation:scan 2s linear infinite;
+}
+
+@keyframes scan{
+0%{top:0}
+100%{top:100%}
 }
 
 .loading{
@@ -117,12 +129,11 @@ margin-top:10px;
 
 </head>
 
-
 <body>
 
 <div class="phone">
 
-<!-- landing -->
+<!-- Landing -->
 
 <div class="screen active" id="landing">
 
@@ -141,16 +152,20 @@ Daily brain boost for 45+
 </div>
 
 
-<!-- scan -->
+<!-- Scan -->
 
 <div class="screen" id="scan">
 
 <h1>Scan your receipt</h1>
 
-<p>Extracting numbers for today's challenge</p>
+<p>Align your receipt in the frame</p>
 
 <div class="scan-box">
-<video id="camera" autoplay></video>
+
+<video id="camera" autoplay playsinline></video>
+
+<div class="scan-line"></div>
+
 </div>
 
 <button onclick="next('ai')">
@@ -167,13 +182,13 @@ Continue
 <h1>AI is thinking</h1>
 
 <div class="loading">
-🧠 Creating your challenge
+🧠 Creating your challenge...
 </div>
 
 </div>
 
 
-<!-- start -->
+<!-- Start -->
 
 <div class="screen" id="start">
 
@@ -188,7 +203,7 @@ Start 1 minute challenge
 </div>
 
 
-<!-- challenge -->
+<!-- Challenge -->
 
 <div class="screen" id="challenge">
 
@@ -224,7 +239,7 @@ Open in Duolingo Math
 </div>
 
 
-<!-- done -->
+<!-- Done -->
 
 <div class="screen" id="done">
 
@@ -254,9 +269,7 @@ See you tomorrow
 
 </div>
 
-
 </div>
-
 
 <script>
 
@@ -278,14 +291,31 @@ next("start")
 
 }
 
-navigator.mediaDevices.getUserMedia({video:true})
-.then(stream=>{
-document.getElementById("camera").srcObject=stream
+async function startCamera(){
+
+try{
+
+const stream = await navigator.mediaDevices.getUserMedia({
+video:{
+facingMode:{ideal:"environment"}
+}
 })
-.catch(()=>{})
+
+document.getElementById("camera").srcObject = stream
+
+}catch(e){
+
+const stream = await navigator.mediaDevices.getUserMedia({video:true})
+
+document.getElementById("camera").srcObject = stream
+
+}
+
+}
+
+startCamera()
 
 </script>
-
 
 </body>
 
